@@ -10,7 +10,7 @@ angular.module('conFusion', [
 	'conFusion.services'
 ])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $rootScope, $ionicLoading) {
 	$ionicPlatform.ready(function() {
 		// Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
 		// for form inputs)
@@ -23,6 +23,24 @@ angular.module('conFusion', [
 			// org.apache.cordova.statusbar required
 			StatusBar.styleDefault();
 		}
+	});
+
+	// Loading message while changing states
+	$rootScope.$on('loading:show', function(){
+		$ionicLoading.show({
+			template: '<ion-spinner></ion-spinner> Loading...'
+		})
+	});
+	$rootScope.$on('loading:hide', function(){
+		$ionicLoading.hide();
+	});
+	$rootScope.$on('$stateChangeStart', function(){
+		console.log('Loading...');
+		$rootScope.$broadcast('loading:show');
+	});
+	$rootScope.$on('$stateChangeSuccess', function(){
+		console.log('Done');
+		$rootScope.$broadcast('loading:hide');
 	});
 })
 
