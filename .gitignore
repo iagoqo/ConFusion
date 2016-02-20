@@ -1,0 +1,9 @@
+node_modules/
+platforms/
+plugins/
+
+# Brackets config
+.editorconfig
+# Vim temp files
+*.swp
+
