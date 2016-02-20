@@ -1,3 +1,3 @@
-Project for the series of courses on full-stack web development on coursera.
+Project for the full-stack web development series of courses on coursera.
 
-Much of the code is provided by the course, having to make changes upon it.
+Code style may be inconsistent since the course provides part of the code.
