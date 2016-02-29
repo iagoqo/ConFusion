@@ -73,58 +73,44 @@ angular.module('conFusion.controllers', [])
 
 })
 
-.controller('MenuController', ['$scope', 'menuFactory', 'favoriteFactory', 'baseURL', '$ionicListDelegate',
-function($scope, menuFactory, favoriteFactory, baseURL, $ionicListDelegate) {
-		$scope.baseURL = baseURL;
-		$scope.tab = 1;
-		$scope.filtText = '';
-		$scope.showDetails = false;
-		$scope.showMenu = false;
-		$scope.message = "Loading ...";
+.controller('MenuController', ['$scope', 'dishes', 'favoriteFactory', 'baseURL', '$ionicListDelegate',
+function($scope, dishes, favoriteFactory, baseURL, $ionicListDelegate) {
+	$scope.baseURL = baseURL;
+	$scope.tab = 1;
+	$scope.filtText = '';
+	$scope.showDetails = false;
+	$scope.dishes = dishes;
 
-		menuFactory.query(
-			function(response) {
-				console.log(response);
-				$scope.dishes = response;
-				$scope.showMenu = true;
-			},
-			function(response) {
-				$scope.message = "Error: "+response.status + " " + response.statusText;
+	$scope.select = function(setTab) {
+			$scope.tab = setTab;
+
+			if (setTab === 2) {
+					$scope.filtText = "appetizer";
 			}
-		);
+			else if (setTab === 3) {
+					$scope.filtText = "mains";
+			}
+			else if (setTab === 4) {
+					$scope.filtText = "dessert";
+			}
+			else {
+					$scope.filtText = "";
+			}
+	};
 
+	$scope.isSelected = function (checkTab) {
+			return ($scope.tab === checkTab);
+	};
 
-		$scope.select = function(setTab) {
-				$scope.tab = setTab;
+	$scope.toggleDetails = function() {
+			$scope.showDetails = !$scope.showDetails;
+	};
 
-				if (setTab === 2) {
-						$scope.filtText = "appetizer";
-				}
-				else if (setTab === 3) {
-						$scope.filtText = "mains";
-				}
-				else if (setTab === 4) {
-						$scope.filtText = "dessert";
-				}
-				else {
-						$scope.filtText = "";
-				}
-		};
-
-		$scope.isSelected = function (checkTab) {
-				return ($scope.tab === checkTab);
-		};
-
-		$scope.toggleDetails = function() {
-				$scope.showDetails = !$scope.showDetails;
-		};
-
-		$scope.addFavorite = function (index) {
-			console.log("index is " + index);
-			favoriteFactory.addToFavorites(index);
-			$ionicListDelegate.closeOptionButtons();
-		}
-
+	$scope.addFavorite = function (index) {
+		console.log("index is " + index);
+		favoriteFactory.addToFavorites(index);
+		$ionicListDelegate.closeOptionButtons();
+	}
 }])
 
 .controller('ContactController', ['$scope', function($scope) {
@@ -235,34 +221,17 @@ menuFactory.update({id:$scope.dish.id},$scope.dish);
 		}
 }])
 
-// implement the IndexController and About Controller here
+.controller('IndexController', ['$scope', 'baseURL', 'leader', 'dish', 'promotion',
+function($scope, baseURL, leader, dish, promotion) {
+	$scope.baseURL = baseURL;
+	$scope.leader = leader;
+	$scope.dish = dish;
+	$scope.promotion = promotion;
+}])
 
-.controller('IndexController', ['$scope', 'baseURL', 'menuFactory', 'corporateFactory', 'promotionFactory',
-function($scope, baseURL, menuFactory, corporateFactory, promotionFactory) {
-								$scope.baseURL = baseURL;
-								$scope.leader = corporateFactory.get({id:3});
-								$scope.showDish = false;
-								$scope.message="Loading ...";
-								$scope.dish = menuFactory.get({id:0})
-								.$promise.then(
-										function(response){
-												$scope.dish = response;
-												$scope.showDish = true;
-										},
-										function(response) {
-												$scope.message = "Error: "+response.status + " " + response.statusText;
-										}
-								);
-								$scope.promotion = menuFactory.get({id:0});
-
-						}])
-
-.controller('AboutController', ['$scope', 'corporateFactory', 'baseURL',  function($scope, corporateFactory, baseURL) {
-
-						$scope.baseURL = baseURL;
-						$scope.leaders = corporateFactory.query();
-						console.log($scope.leaders);
-
+.controller('AboutController', ['$scope', 'leaders', 'baseURL',  function($scope, leaders, baseURL) {
+	$scope.baseURL = baseURL;
+	$scope.leaders = leaders;
 }])
 
 .controller('FavoritesController', ['$scope', 'dishes', 'favorites', 'favoriteFactory', 'baseURL', '$ionicListDelegate', '$ionicPopup', '$ionicLoading', '$timeout', function ($scope, dishes, favorites, favoriteFactory, baseURL, $ionicListDelegate, $ionicPopup, $ionicLoading, $timeout) {
